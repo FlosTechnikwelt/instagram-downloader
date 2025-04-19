@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        button {
+            background: #0095f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0081d6;
+        }
+        #status {
+            margin-top: 20px;
+            padding: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Instagram Downloader</h1>
+    
+    <div class="container">
+        <h2>Download Single Post</h2>
+        <input type="text" id="postUrl" placeholder="Enter Instagram post URL (e.g., https://www.instagram.com/p/ABC123)">
+        <button onclick="downloadPost()">Download Post</button>
+    </div>
+
+    <div class="container">
+        <h2>Download Account</h2>
+        <input type="text" id="accountUrl" placeholder="Enter Instagram profile URL (e.g., https://www.instagram.com/username)">
+        <button onclick="downloadAccount()">Download Account</button>
+    </div>
+
+    <div id="status"></div>
+
+    <script>
+        function showStatus(message, isError = false) {
+            const status = document.getElementById('status');
+            status.style.display = 'block';
+            status.style.background = isError ? '#ffebee' : '#e8f5e9';
+            status.style.color = isError ? '#c62828' : '#2e7d32';
+            status.textContent = message;
+        }
+
+        function extractUsername(url) {
+            const match = url.match(/instagram\.com\/([^/?]+)/);
+            return match ? match[1] : null;
+        }
+
+        function extractPostCode(url) {
+            const match = url.match(/instagram\.com\/p\/([^/?]+)/);
+            return match ? match[1] : null;
+        }
+
+        async function downloadPost() {
+            const url = document.getElementById('postUrl').value;
+            const postCode = extractPostCode(url);
+            
+            if (!postCode) {
+                showStatus('Invalid Instagram post URL', true);
+                return;
+            }
+
+            showStatus('Downloading post...');
+            window.location.href = `/download/post/${postCode}`;
+        }
+
+        async function downloadAccount() {
+            const url = document.getElementById('accountUrl').value;
+            const username = extractUsername(url);
+            
+            if (!username) {
+                showStatus('Invalid Instagram profile URL', true);
+                return;
+            }
+
+            showStatus('Downloading account...');
+            window.location.href = `/download/account/${username}`;
+        }
+    </script>
+</body>
+</html>
